@@ -75,5 +75,6 @@ jobs:
             REPO_URL=${{ secrets.PYPI_REPOSITORY_URL }}
             REPO_USERNAME=${{ secrets.PYPI_USERNAME }}
             REPO_PASSWORD=${{ secrets.PYPI_PASSWORD }}
-            PYPI_API_TOKEN=${{ secrets.PYPI_API_TOKEN }}
+            PACKAGE_INSTALL_NAME=${{ github.event.repository.name }}
+            PACKAGE_IMPORT_NAME=$(echo ${{ github.event.repository.name }} | tr '-' '_')
           target: package-installer
