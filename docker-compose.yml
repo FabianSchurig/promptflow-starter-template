@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  fastapi:
+    image: ghcr.io/fabianschurig/promptflow-starter-template/fastapi:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.fastapi
+      args:
+        REPO_URL: ${REPO_URL}
+        REPO_USER: ${REPO_USER}
+        REPO_PASSWORD: ${REPO_PASSWORD}
+        PACKAGE_INSTALL_NAME: ${PACKAGE_INSTALL_NAME}
+        PACKAGE_IMPORT_NAME: ${PACKAGE_IMPORT_NAME}
+        HOST: ${HOST}
+        PORT: ${PORT}
+        WORKERS: ${WORKERS}
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_API_BASE: ${OPENAI_API_BASE}
+      OPENAI_API_VERSION: ${OPENAI_API_VERSION}
+      JWT_VERIFICATION_ENABLED: ${JWT_VERIFICATION_ENABLED}
+      ENVIRONMENT: ${ENVIRONMENT}
+    ports:
+      - "5000:5000"
+    # volumes:
+    #   - .:/app
+    command: >
+      sh -c "pf connection create -f connection.yaml --set api_key=$OPENAI_API_KEY api_base=$OPENAI_API_BASE api_version=$OPENAI_API_VERSION;
+             uvicorn ${PACKAGE_IMPORT_NAME}.api:app --host ${HOST} --port ${PORT} --workers ${WORKERS}"

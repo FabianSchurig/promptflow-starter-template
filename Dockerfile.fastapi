@@ -1,0 +1,39 @@
+# Use the official Python image from the Docker Hub
+FROM python:3.12-slim-bookworm AS base-pypi
+
+# Define build arguments
+ARG REPO_URL
+ARG REPO_USER
+ARG REPO_PASSWORD
+
+# Set environment variables
+ENV REPO_URL=${REPO_URL}
+ENV REPO_USER=${REPO_USER}
+
+# Create pip configuration file if all REPO_* args are set
+RUN if [ -n "$REPO_URL" ] && [ -n "$REPO_USER" ] && [ -n "$REPO_PASSWORD" ]; then \
+    mkdir -p /root/.config/pip && \
+    echo "[global]\nextra-index-url = https://${REPO_USER}:${REPO_PASSWORD}@${REPO_URL}" > /root/.config/pip/pip.conf; \
+    fi
+
+FROM base-pypi AS package-installer
+
+ARG PACKAGE_INSTALL_NAME
+ARG PACKAGE_IMPORT_NAME
+ARG HOST=0.0.0.0
+ARG PORT=5000
+ARG WORKERS=4
+
+RUN pip install ${PACKAGE_INSTALL_NAME}
+
+WORKDIR /${PACKAGE_IMPORT_NAME}
+
+COPY connection.yaml /${PACKAGE_IMPORT_NAME}/connection.yaml
+
+ENV PACKAGE_INSTALL_NAME=${PACKAGE_INSTALL_NAME}
+ENV PACKAGE_IMPORT_NAME=${PACKAGE_IMPORT_NAME}
+ENV HOST=${HOST}
+ENV PORT=${PORT}
+ENV WORKERS=${WORKERS}
+
+CMD ["sh", "-c", "pf connection create -f connection.yaml --set api_key=$OPENAI_API_KEY api_base=$OPENAI_API_BASE api_version=$OPENAI_API_VERSION ; uvicorn ${PACKAGE_IMPORT_NAME}.api:app --host ${HOST} --port ${PORT} --workers ${WORKERS}"]
