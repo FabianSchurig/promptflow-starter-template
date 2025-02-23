@@ -3,6 +3,9 @@ FROM python:3.12-slim AS builder
 # Install Poetry via pip
 RUN pip install poetry
 
+# Install curl
+RUN apt-get update && apt-get install -y curl
+
 FROM builder AS build
 
 # Copy project files
