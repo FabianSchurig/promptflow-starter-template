@@ -11,12 +11,12 @@ ARG REPO_PASSWORD=""
 ARG PYPI_API_TOKEN=""
 ARG PACKAGE_VERSION=""
 
-# Extract version from pyproject.toml and set it as PACKAGE_VERSION
-RUN PACKAGE_VERSION=$(grep -oP '(?<=version = ")[^"]*' pyproject.toml)
-
 # Copy project files
 COPY . /app
 WORKDIR /app
+
+# Extract version from pyproject.toml and set it as PACKAGE_VERSION
+RUN PACKAGE_VERSION=$(grep -oP '(?<=version = ")[^"]*' pyproject.toml)
 
 # Install dependencies and build the package
 RUN poetry install --no-root \
@@ -29,6 +29,13 @@ RUN if [ -z "$REPO_URL" ]; then \
     poetry config repositories.my-repo $REPO_URL \
     && poetry config http-basic.my-repo $REPO_USERNAME $REPO_PASSWORD; \
     fi
+
+FROM build as test
+
+# Run tests
+RUN poetry run pytest
+
+FROM build as publish
 
 # Publish the package (assuming you have configured the repository in pyproject.toml)
 RUN if [ -z "$REPO_URL" ]; then \
