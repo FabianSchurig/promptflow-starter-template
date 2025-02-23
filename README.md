@@ -80,7 +80,7 @@ You have now set up your project for publishing to PyPi and automated the proces
 
 - **Build the Python package**:
     ```sh
-    docker build --build-arg PYPI_API_TOKEN=$PYPI_API_TOKEN -t ghcr.io/fabianschurig/promptflow-starter-template/build:latest .
+    docker build --build-arg PYPI_API_TOKEN=$PYPI_API_TOKEN --build-arg PACKAGE_VERSION=0.1.2 -t ghcr.io/fabianschurig/promptflow-starter-template/build:latest .
     ```
 
 - **Build the Docker image using the package from previous step**:
@@ -107,3 +107,17 @@ You have now set up your project for publishing to PyPi and automated the proces
     PACKAGE_INSTALL_NAME=promptflow-starter-template
     PACKAGE_IMPORT_NAME=promptflow_starter_template
     ```
+
+### Automatically Set PACKAGE_VERSION
+
+To automatically set the `PACKAGE_VERSION` based on the version specified in `pyproject.toml`, you can use the following command:
+
+```sh
+PACKAGE_VERSION=$(grep -oP '(?<=version = ")[^"]*' pyproject.toml)
+```
+
+This command extracts the version from `pyproject.toml` and sets it as the `PACKAGE_VERSION` environment variable. You can then use this variable when building the Docker image:
+
+```sh
+docker build --build-arg PYPI_API_TOKEN=$PYPI_API_TOKEN --build-arg PACKAGE_VERSION=$PACKAGE_VERSION -t ghcr.io/fabianschurig/promptflow-starter-template/build:latest .
+```

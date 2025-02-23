@@ -9,6 +9,10 @@ ARG REPO_URL=""
 ARG REPO_USERNAME=""
 ARG REPO_PASSWORD=""
 ARG PYPI_API_TOKEN=""
+ARG PACKAGE_VERSION=""
+
+# Extract version from pyproject.toml and set it as PACKAGE_VERSION
+RUN PACKAGE_VERSION=$(grep -oP '(?<=version = ")[^"]*' pyproject.toml)
 
 # Copy project files
 COPY . /app
@@ -28,8 +32,11 @@ RUN if [ -z "$REPO_URL" ]; then \
 
 # Publish the package (assuming you have configured the repository in pyproject.toml)
 RUN if [ -z "$REPO_URL" ]; then \
-    poetry publish; \
+    if ! curl --silent --fail https://pypi.org/project/promptflow-starter-template/$PACKAGE_VERSION/ > /dev/null; then \
+        poetry publish; \
+    else \
+        echo "Package version $PACKAGE_VERSION already exists on PyPI. Skipping publish step."; \
+    fi; \
     else \
     poetry publish --repository my-repo --username $REPO_USERNAME --password $REPO_PASSWORD; \
     fi
-
