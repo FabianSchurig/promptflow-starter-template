@@ -38,9 +38,10 @@ jobs:
           build-args: |
             REPO_URL=${{ secrets.PYPI_REPOSITORY_URL }}
             REPO_USERNAME=${{ secrets.PYPI_USERNAME }}
-            REPO_PASSWORD=${{ secrets.PYPI_PASSWORD }}
-            PYPI_API_TOKEN=${{ secrets.PYPI_API_TOKEN }}
             PACKAGE_VERSION=${{ env.PACKAGE_VERSION }}
+          secrets: |
+            id=pypi_api_token,src=${{ secrets.PYPI_API_TOKEN }}
+            id=repo_password,src=${{ secrets.PYPI_PASSWORD }}
           target: build
 
       - name: Run tests with docker build
@@ -55,7 +56,8 @@ jobs:
           build-args: |
             REPO_URL=${{ secrets.PYPI_REPOSITORY_URL }}
             REPO_USERNAME=${{ secrets.PYPI_USERNAME }}
-            REPO_PASSWORD=${{ secrets.PYPI_PASSWORD }}
-            PYPI_API_TOKEN=${{ secrets.PYPI_API_TOKEN }}
             PACKAGE_VERSION=${{ env.PACKAGE_VERSION }}
+          secrets: |
+            id=pypi_api_token,src=${{ secrets.PYPI_API_TOKEN }}
+            id=repo_password,src=${{ secrets.PYPI_PASSWORD }}
           target: test

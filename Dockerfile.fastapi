@@ -4,7 +4,6 @@ FROM python:3.12-slim-bookworm AS base-pypi
 # Define build arguments
 ARG REPO_URL
 ARG REPO_USER
-ARG REPO_PASSWORD
 ARG PACKAGE_VERSION="0.1.2"
 
 # Set environment variables
@@ -12,7 +11,8 @@ ENV REPO_URL=${REPO_URL}
 ENV REPO_USER=${REPO_USER}
 
 # Create pip configuration file if all REPO_* args are set
-RUN if [ -n "$REPO_URL" ] && [ -n "$REPO_USER" ] && [ -n "$REPO_PASSWORD" ]; then \
+RUN --mount=type=secret,id=repo_password,env=REPO_PASSWORD \
+    if [ -n "$REPO_URL" ] && [ -n "$REPO_USER" ]; then \
     mkdir -p /root/.config/pip && \
     echo "[global]\nextra-index-url = https://${REPO_USER}:${REPO_PASSWORD}@${REPO_URL}" > /root/.config/pip/pip.conf; \
     fi
