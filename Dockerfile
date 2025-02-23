@@ -30,6 +30,13 @@ RUN if [ -z "$REPO_URL" ]; then \
     && poetry config http-basic.my-repo $REPO_USERNAME $REPO_PASSWORD; \
     fi
 
+FROM build as test
+
+# Run tests
+RUN poetry run pytest
+
+FROM build as publish
+
 # Publish the package (assuming you have configured the repository in pyproject.toml)
 RUN if [ -z "$REPO_URL" ]; then \
     if ! curl --silent --fail https://pypi.org/project/promptflow-starter-template/$PACKAGE_VERSION/ > /dev/null; then \

@@ -47,6 +47,23 @@ jobs:
             PACKAGE_VERSION=${{ env.PACKAGE_VERSION }}
           target: build
 
+      - name: Publish Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${{ env.REPO_NAME }}/publish:latest
+            ghcr.io/${{ env.REPO_NAME }}/publish:${{ github.sha }}
+          file: Dockerfile
+          build-args: |
+            REPO_URL=${{ secrets.PYPI_REPOSITORY_URL }}
+            REPO_USERNAME=${{ secrets.PYPI_USERNAME }}
+            REPO_PASSWORD=${{ secrets.PYPI_PASSWORD }}
+            PYPI_API_TOKEN=${{ secrets.PYPI_API_TOKEN }}
+            PACKAGE_VERSION=${{ env.PACKAGE_VERSION }}
+          target: publish
+
   build-fastapi:
     runs-on: ubuntu-latest
 
