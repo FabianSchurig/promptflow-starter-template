@@ -66,7 +66,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          push: false
+          push: true
           tags: |
             ghcr.io/${{ env.REPO_NAME }}/fastapi:latest
             ghcr.io/${{ env.REPO_NAME }}/fastapi:${{ github.sha }}
