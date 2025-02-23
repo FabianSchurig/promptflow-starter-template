@@ -11,12 +11,12 @@ ARG REPO_PASSWORD=""
 ARG PYPI_API_TOKEN=""
 ARG PACKAGE_VERSION=""
 
-# Extract version from pyproject.toml and set it as PACKAGE_VERSION
-RUN PACKAGE_VERSION=$(grep -oP '(?<=version = ")[^"]*' pyproject.toml)
-
 # Copy project files
 COPY . /app
 WORKDIR /app
+
+# Extract version from pyproject.toml and set it as PACKAGE_VERSION
+RUN PACKAGE_VERSION=$(grep -oP '(?<=version = ")[^"]*' pyproject.toml)
 
 # Install dependencies and build the package
 RUN poetry install --no-root \
