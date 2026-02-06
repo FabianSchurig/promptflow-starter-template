@@ -1,0 +1,49 @@
+{
+  "name": "Yocto C++ Multi-Repository Development",
+  "image": "crops/poky:ubuntu-22.04",
+  "runArgs": [
+    "--network",
+    "host"
+  ],
+  "mounts": [
+    "source=yocto-sstate-cache,target=/yocto/sstate-cache,type=volume",
+    "source=yocto-downloads,target=/yocto/downloads,type=volume"
+  ],
+  "containerEnv": {
+    "SSTATE_DIR": "/yocto/sstate-cache",
+    "DL_DIR": "/yocto/downloads"
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "files.watcherExclude": {
+          "**/build/**": true,
+          "**/tmp/**": true,
+          "**/sstate-cache/**": true,
+          "**/downloads/**": true,
+          "**/.git/objects/**": true,
+          "**/.git/subtree-cache/**": true
+        },
+        "search.exclude": {
+          "**/build/**": true,
+          "**/tmp/**": true,
+          "**/sstate-cache/**": true,
+          "**/downloads/**": true
+        }
+      },
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools",
+        "yocto-project.yocto-bitbake",
+        "twxs.cmake",
+        "jeff-hykin.better-cpp-syntax"
+      ]
+    }
+  },
+  "postCreateCommand": "bash -c 'echo \"\" && echo \"=== Yocto Development Environment Ready ===\" && echo \"\" && echo \"Next steps:\" && echo \"1. Clone or link my-lib and my-app repositories\" && echo \"2. Clone Poky: git clone git://git.yoctoproject.org/poky\" && echo \"3. Run: cd yocto-devtool-poc && ./scripts/setup-workspace.sh\" && echo \"\" && echo \"See yocto-devtool-poc/README.md for detailed instructions.\" && echo \"\"'",
+  "remoteUser": "yoctouser",
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  }
+}

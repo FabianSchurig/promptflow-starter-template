@@ -1,0 +1,62 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 10,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "yocto-debug",
+      "displayName": "Yocto Debug Build",
+      "description": "Debug build using Yocto SDK toolchain",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build-debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_TOOLCHAIN_FILE": "/path/to/build/workspace/recipes/my-app/recipe-sysroot-native/usr/share/cmake/OEToolchainConfig.cmake",
+        "CMAKE_SYSROOT": "/path/to/build/workspace/recipes/my-app/recipe-sysroot",
+        "CMAKE_PREFIX_PATH": "/path/to/build/workspace/recipes/my-app/recipe-sysroot/usr;/path/to/build/workspace/recipes/my-lib/recipe-sysroot/usr",
+        "CMAKE_FIND_ROOT_PATH": "/path/to/build/workspace/recipes/my-app/recipe-sysroot",
+        "CMAKE_FIND_ROOT_PATH_MODE_PROGRAM": "NEVER",
+        "CMAKE_FIND_ROOT_PATH_MODE_LIBRARY": "ONLY",
+        "CMAKE_FIND_ROOT_PATH_MODE_INCLUDE": "ONLY",
+        "CMAKE_FIND_ROOT_PATH_MODE_PACKAGE": "ONLY",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "yocto-release",
+      "displayName": "Yocto Release Build",
+      "description": "Release build using Yocto SDK toolchain",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build-release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_TOOLCHAIN_FILE": "/path/to/build/workspace/recipes/my-app/recipe-sysroot-native/usr/share/cmake/OEToolchainConfig.cmake",
+        "CMAKE_SYSROOT": "/path/to/build/workspace/recipes/my-app/recipe-sysroot",
+        "CMAKE_PREFIX_PATH": "/path/to/build/workspace/recipes/my-app/recipe-sysroot/usr;/path/to/build/workspace/recipes/my-lib/recipe-sysroot/usr",
+        "CMAKE_FIND_ROOT_PATH": "/path/to/build/workspace/recipes/my-app/recipe-sysroot",
+        "CMAKE_FIND_ROOT_PATH_MODE_PROGRAM": "NEVER",
+        "CMAKE_FIND_ROOT_PATH_MODE_LIBRARY": "ONLY",
+        "CMAKE_FIND_ROOT_PATH_MODE_INCLUDE": "ONLY",
+        "CMAKE_FIND_ROOT_PATH_MODE_PACKAGE": "ONLY",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "yocto-debug",
+      "configurePreset": "yocto-debug",
+      "displayName": "Build Yocto Debug",
+      "description": "Build with debug configuration"
+    },
+    {
+      "name": "yocto-release",
+      "configurePreset": "yocto-release",
+      "displayName": "Build Yocto Release",
+      "description": "Build with release configuration"
+    }
+  ]
+}
